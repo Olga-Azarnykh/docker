@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kubedoom
+  name: kubedoom
+  namespace: kubedoom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubedoom
+  template:
+    metadata:
+      labels:
+        app: kubedoom
+trategy:
+  type: Rolling
+  rollingParams:
+    updatePeriodSeconds: 1 
+    intervalSeconds: 1 
+    timeoutSeconds: 120 
+    maxSurge: "50%" 
+    maxUnavailable: "20%"
+    spec:
+      hostNetwork: true
+      serviceAccountName: kubedoom
+      containers:
+      - image: storaxdev/kubedoom:0.5.0
+        name: kubedoom
+        ports:
+        - containerPort: 5900
+          protocol: TCP
+          hostNetwork: true
+        serviceAccountName: kubedoom
